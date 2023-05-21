@@ -1,0 +1,41 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build for linux",
+            "type": "shell",
+            "command": "zig build-lib --color on --name CursedModNative_Linux -O ReleaseSmall -target x86_64-linux -dynamic -fstrip --library c --library c++ -cflags -std=c++20 -- ../src/main.cpp",
+            "options": {
+                "cwd": "${workspaceFolder}/out"
+            },
+        },
+        {
+            "label": "Build for mac os",
+            "type": "shell",
+            "command": "zig build-lib --color on --name CursedModNative_MacOS -O ReleaseSmall -target x86_64-macos -dynamic -fstrip --library c --library c++ -cflags -std=c++20 -- ../src/main.cpp",
+            "options": {
+                "cwd": "${workspaceFolder}/out"
+            },
+        },
+        {
+            "label": "Build for windows",
+            "type": "shell",
+            "command": "zig build-lib --color on --name CursedModNative_Windows -O ReleaseSmall -target x86_64-windows -dynamic -fstrip --library c --library c++ --library UxTheme --library Dwmapi --library User32 -cflags -std=c++20 -- ../src/main.cpp",
+            "options": {
+                "cwd": "${workspaceFolder}/out"
+            },
+        },
+        {
+            "label": "Full Build",
+            "dependsOn": [
+                "Build for linux",
+                "Build for mac os",
+                "Build for windows"
+            ],
+            "dependsOrder": "parallel",
+            "problemMatcher": []
+        }
+    ]
+}
