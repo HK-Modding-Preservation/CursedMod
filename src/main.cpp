@@ -18,6 +18,9 @@ int _RegisterSignalCallbacks() {
 }
 
 extern int Init() {
+#ifdef CM_Gnu
+  openFile(true);
+#endif
   printInFile("Initializing library...");
 
   if (_RegisterSignalCallbacks()) {
