@@ -56,24 +56,48 @@ public static class NativeWrapper
     }
 
     [DllImport("CursedModNative_Linux", EntryPoint = "SendShellNotification", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
-    private static extern bool Native_Linux_SendShellNotification(string message);
-    private static bool Linux_SendShellNotification_Wrap(string message) => Native_Linux_SendShellNotification(message); 
+    private static extern bool Native_Linux_SendShellNotification(string title, string message);
+    private static bool Linux_SendShellNotification_Wrap(string title, string message) => Native_Linux_SendShellNotification(title, message); 
     [DllImport("CursedModNative_MacOS", EntryPoint = "SendShellNotification", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
-    private static extern bool Native_MacOS_SendShellNotification(string message);
-    private static bool MacOS_SendShellNotification_Wrap(string message) => Native_MacOS_SendShellNotification(message);
+    private static extern bool Native_MacOS_SendShellNotification(string title, string message);
+    private static bool MacOS_SendShellNotification_Wrap(string title, string message) => Native_MacOS_SendShellNotification(title, message);
     [DllImport("CursedModNative_Windows", EntryPoint = "SendShellNotification", ExactSpelling = true, CharSet = CharSet.Unicode, PreserveSig = true)]
-    private static extern bool Native_Windows_SendShellNotification(string message);
-    private static bool Windows_SendShellNotification_Wrap(string message) => Native_Windows_SendShellNotification(message);
-    internal static bool SendShellNotification(string message)
+    private static extern bool Native_Windows_SendShellNotification(string title, string message);
+    private static bool Windows_SendShellNotification_Wrap(string title, string message) => Native_Windows_SendShellNotification(title, message);
+    internal static bool SendShellNotification(string title, string message)
     {
         switch (SystemInfo.operatingSystemFamily)
         {
             case OperatingSystemFamily.Linux:
-                return Linux_SendShellNotification_Wrap(message);
+                return Linux_SendShellNotification_Wrap(title, message);
             case OperatingSystemFamily.MacOSX:
-                return MacOS_SendShellNotification_Wrap(message);
+                return MacOS_SendShellNotification_Wrap(title, message);
             case OperatingSystemFamily.Windows:
-                return Windows_SendShellNotification_Wrap(message);
+                return Windows_SendShellNotification_Wrap(title, message);
+            default:
+                return false;
+        };
+    }
+
+    [DllImport("CursedModNative_Linux", EntryPoint = "RemoveShellNotification", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
+    private static extern bool Native_Linux_RemoveShellNotification();
+    private static bool Linux_RemoveShellNotification_Wrap() => Native_Linux_RemoveShellNotification(); 
+    [DllImport("CursedModNative_MacOS", EntryPoint = "RemoveShellNotification", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
+    private static extern bool Native_MacOS_RemoveShellNotification();
+    private static bool MacOS_RemoveShellNotification_Wrap() => Native_MacOS_RemoveShellNotification();
+    [DllImport("CursedModNative_Windows", EntryPoint = "RemoveShellNotification", ExactSpelling = true, CharSet = CharSet.Unicode, PreserveSig = true)]
+    private static extern bool Native_Windows_RemoveShellNotification();
+    private static bool Windows_RemoveShellNotification_Wrap() => Native_Windows_RemoveShellNotification();
+    internal static bool RemoveShellNotification()
+    {
+        switch (SystemInfo.operatingSystemFamily)
+        {
+            case OperatingSystemFamily.Linux:
+                return Linux_RemoveShellNotification_Wrap();
+            case OperatingSystemFamily.MacOSX:
+                return MacOS_RemoveShellNotification_Wrap();
+            case OperatingSystemFamily.Windows:
+                return Windows_RemoveShellNotification_Wrap();
             default:
                 return false;
         };
