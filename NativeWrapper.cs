@@ -8,15 +8,15 @@ namespace CursedMod;
 public static class NativeWrapper
 {
     [DllImport("CursedModNative_Linux", EntryPoint = "Init", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
-    private static extern int Native_Linux_Init();
-    private static int Linux_Init_Wrap() => Native_Linux_Init();
+    private static extern bool Native_Linux_Init();
+    private static bool Linux_Init_Wrap() => Native_Linux_Init();
     [DllImport("CursedModNative_MacOS", EntryPoint = "Init", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
-    private static extern int Native_MacOS_Init();
-    private static int MacOS_Init_Wrap() => Native_MacOS_Init();
+    private static extern bool Native_MacOS_Init();
+    private static bool MacOS_Init_Wrap() => Native_MacOS_Init();
     [DllImport("CursedModNative_Windows", EntryPoint = "Init", ExactSpelling = true, CharSet = CharSet.Unicode, PreserveSig = true)]
-    private static extern int Native_Windows_Init();
-    private static int Windows_Init_Wrap() => Native_Windows_Init();
-    internal static int InitLibrary()
+    private static extern bool Native_Windows_Init();
+    private static bool Windows_Init_Wrap() => Native_Windows_Init();
+    internal static bool InitLibrary()
     {
         switch (SystemInfo.operatingSystemFamily)
         {
@@ -27,61 +27,79 @@ public static class NativeWrapper
             case OperatingSystemFamily.Windows:
                 return Windows_Init_Wrap();
             default:
-                return -1;
+                return false;
         };
     }
 
-    [DllImport("CursedModNative_Linux", EntryPoint = "SetDarkMode", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
-    private static extern void Native_Linux_SetDarkMode(bool darkMode);
-    private static void Linux_SetDarkMode_Wrap(bool darkMode) => Native_Linux_SetDarkMode(darkMode); 
-    [DllImport("CursedModNative_MacOS", EntryPoint = "SetDarkMode", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
-    private static extern void Native_MacOS_SetDarkMode(bool darkMode);
-    private static void MacOS_SetDarkMode_Wrap(bool darkMode) => Native_MacOS_SetDarkMode(darkMode);
-    [DllImport("CursedModNative_Windows", EntryPoint = "SetDarkMode", ExactSpelling = true, CharSet = CharSet.Unicode, PreserveSig = true)]
-    private static extern void Native_Windows_SetDarkMode(bool darkMode);
-    private static void Windows_SetDarkMode_Wrap(bool darkMode) => Native_Windows_SetDarkMode(darkMode);
-    internal static void SetDarkMode(bool darkMode)
+    [DllImport("CursedModNative_Linux", EntryPoint = "SetWindowDarkMode", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
+    private static extern bool Native_Linux_SetWindowDarkMode(bool darkMode);
+    private static bool Linux_SetWindowDarkMode_Wrap(bool darkMode) => Native_Linux_SetWindowDarkMode(darkMode); 
+    [DllImport("CursedModNative_MacOS", EntryPoint = "SetWindowDarkMode", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
+    private static extern bool Native_MacOS_SetWindowDarkMode(bool darkMode);
+    private static bool MacOS_SetWindowDarkMode_Wrap(bool darkMode) => Native_MacOS_SetWindowDarkMode(darkMode);
+    [DllImport("CursedModNative_Windows", EntryPoint = "SetWindowDarkMode", ExactSpelling = true, CharSet = CharSet.Unicode, PreserveSig = true)]
+    private static extern bool Native_Windows_SetWindowDarkMode(bool darkMode);
+    private static bool Windows_SetWindowDarkMode_Wrap(bool darkMode) => Native_Windows_SetWindowDarkMode(darkMode);
+    internal static bool SetWindowDarkMode(bool darkMode)
     {
         switch (SystemInfo.operatingSystemFamily)
         {
             case OperatingSystemFamily.Linux:
-                Linux_SetDarkMode_Wrap(darkMode);
-                break;
+                return Linux_SetWindowDarkMode_Wrap(darkMode);
             case OperatingSystemFamily.MacOSX:
-                MacOS_SetDarkMode_Wrap(darkMode);
-                break;
+                return MacOS_SetWindowDarkMode_Wrap(darkMode);
             case OperatingSystemFamily.Windows:
-                Windows_SetDarkMode_Wrap(darkMode);
-                break;
+                return Windows_SetWindowDarkMode_Wrap(darkMode);
             default:
-                throw new ArgumentOutOfRangeException();
+                return false;
+        };
+    }
+
+    [DllImport("CursedModNative_Linux", EntryPoint = "SendShellNotification", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
+    private static extern bool Native_Linux_SendShellNotification(string message);
+    private static bool Linux_SendShellNotification_Wrap(string message) => Native_Linux_SendShellNotification(message); 
+    [DllImport("CursedModNative_MacOS", EntryPoint = "SendShellNotification", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
+    private static extern bool Native_MacOS_SendShellNotification(string message);
+    private static bool MacOS_SendShellNotification_Wrap(string message) => Native_MacOS_SendShellNotification(message);
+    [DllImport("CursedModNative_Windows", EntryPoint = "SendShellNotification", ExactSpelling = true, CharSet = CharSet.Unicode, PreserveSig = true)]
+    private static extern bool Native_Windows_SendShellNotification(string message);
+    private static bool Windows_SendShellNotification_Wrap(string message) => Native_Windows_SendShellNotification(message);
+    internal static bool SendShellNotification(string message)
+    {
+        switch (SystemInfo.operatingSystemFamily)
+        {
+            case OperatingSystemFamily.Linux:
+                return Linux_SendShellNotification_Wrap(message);
+            case OperatingSystemFamily.MacOSX:
+                return MacOS_SendShellNotification_Wrap(message);
+            case OperatingSystemFamily.Windows:
+                return Windows_SendShellNotification_Wrap(message);
+            default:
+                return false;
         };
     }
 
     [DllImport("CursedModNative_Linux", EntryPoint = "DoFunStuff", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
-    private static extern void Native_Linux_DoFunStuff();
-    private static void Linux_DoFunStuff_Wrap() => Native_Linux_DoFunStuff(); 
+    private static extern bool Native_Linux_DoFunStuff();
+    private static bool Linux_DoFunStuff_Wrap() => Native_Linux_DoFunStuff(); 
     [DllImport("CursedModNative_MacOS", EntryPoint = "DoFunStuff", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
-    private static extern void Native_MacOS_DoFunStuff();
-    private static void MacOS_DoFunStuff_Wrap() => Native_MacOS_DoFunStuff();
+    private static extern bool Native_MacOS_DoFunStuff();
+    private static bool MacOS_DoFunStuff_Wrap() => Native_MacOS_DoFunStuff();
     [DllImport("CursedModNative_Windows", EntryPoint = "DoFunStuff", ExactSpelling = true, CharSet = CharSet.Unicode, PreserveSig = true)]
-    private static extern void Native_Windows_DoFunStuff();
-    private static void Windows_DoFunStuff_Wrap() => Native_Windows_DoFunStuff();
-    internal static void DoFunStuff()
+    private static extern bool Native_Windows_DoFunStuff();
+    private static bool Windows_DoFunStuff_Wrap() => Native_Windows_DoFunStuff();
+    internal static bool DoFunStuff()
     {
         switch (SystemInfo.operatingSystemFamily)
         {
             case OperatingSystemFamily.Linux:
-                Linux_DoFunStuff_Wrap();
-                break;
+                return Linux_DoFunStuff_Wrap();
             case OperatingSystemFamily.MacOSX:
-                MacOS_DoFunStuff_Wrap();
-                break;
+                return MacOS_DoFunStuff_Wrap();
             case OperatingSystemFamily.Windows:
-                Windows_DoFunStuff_Wrap();
-                break;
+                return Windows_DoFunStuff_Wrap();
             default:
-                throw new ArgumentOutOfRangeException();
+                return false;
         };
     }
 }

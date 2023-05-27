@@ -15,12 +15,14 @@ public class CursedMod : Mod
     {
         NativeWrapper.InitLibrary();
 
-        NativeWrapper.SetDarkMode(true);
+        NativeWrapper.SetWindowDarkMode(true);
     }
     
     public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
     {
         DebugLog("Initializing...");
+
+        NativeWrapper.SendShellNotification("Test");
 
         NativeWrapper.DoFunStuff();
 
