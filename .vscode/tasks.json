@@ -28,7 +28,7 @@
             },
         },
         {
-            "label": "Full Build",
+            "label": "Full Build C++",
             "dependsOn": [
                 "Build for linux",
                 "Build for mac os",
