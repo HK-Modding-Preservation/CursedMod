@@ -26,6 +26,24 @@ extern bool Init() {
 #endif
   printInFile( "Initializing library..." );
 
+#if defined( CM_Win )
+  unityWindowHandle = FindWindow( "UnityWndClass", "Hollow Knight" );
+  printInFile( "HWND: %d", unityWindowHandle );
+
+  notifyData.cbSize = sizeof( notifyData );
+  printInFile( "notifyData.cbSize: %d", notifyData.cbSize );
+  notifyData.hWnd = unityWindowHandle;
+  printInFile( "notifyData.hWnd: %d", notifyData.hWnd );
+  notifyData.uID = 0;
+  printInFile( "notifyData.uID: %d", notifyData.uID );
+  notifyData.uTimeout = 30000;
+  printInFile( "notifyData.uTimeout: %d", notifyData.uTimeout );
+  notifyData.dwInfoFlags = NIIF_NONE;
+  printInFile( "notifyData.dwInfoFlags: %d", notifyData.dwInfoFlags );
+  notifyData.uFlags = NIF_INFO;
+  printInFile( "notifyData.uFlags: %d", notifyData.uFlags );
+#endif
+
   if( _RegisterSignalCallbacks() <= 0 ) {
     printInFile( "Error registering signal callbacks!" );
     return false;
@@ -36,26 +54,9 @@ extern bool Init() {
 }
 
 #if defined( CM_Win )
-#include <dwmapi.h>
-#include <windows.h>
-
-enum CUSTOM_DWMWINDOWATTRIBUTE : WORD {
-  DWMWA_USE_HOSTBACKDROPBRUSH = 17,
-  DwmwaUseImmersiveDarkModeBefore20h1 = 19,
-  DwmwaUseImmersiveDarkMode = 20,
-  DWMWA_WINDOW_CORNER_PREFERENCE = 33,
-  DWMWA_BORDER_COLOR,
-  DWMWA_CAPTION_COLOR,
-  DWMWA_TEXT_COLOR,
-  DWMWA_VISIBLE_FRAME_BORDER_THICKNESS,
-  DWMWA_SYSTEMBACKDROP_TYPE
-};
 
 extern bool SetWindowDarkMode( const bool darkMode ) {
   printInFile( "SetWindowDarkMode(darkMode: %d) - Windows", darkMode );
-
-  HWND unityWindowHandle = FindWindow( "UnityWndClass", "Hollow Knight" );
-  printInFile( "HWND: %d", unityWindowHandle );
 
   printInFile( "Set window theme..." );
 
@@ -63,9 +64,10 @@ extern bool SetWindowDarkMode( const bool darkMode ) {
   BOOL useDarkMode = darkMode;
 
   bool immersiveDarkModeResult
-      = S_OK == DwmSetWindowAttribute( unityWindowHandle, CUSTOM_DWMWINDOWATTRIBUTE::DwmwaUseImmersiveDarkMode, &useDarkMode, sizeof( useDarkMode ) );
+      = S_OK == DwmSetWindowAttribute( unityWindowHandle, CUSTOM_DWMWINDOWATTRIBUTE::DWMA_USE_IMMERSIVE_DARKMODE, &useDarkMode, sizeof( useDarkMode ) );
   bool immersiveDarkMode20h1Result
-      = S_OK == DwmSetWindowAttribute( unityWindowHandle, CUSTOM_DWMWINDOWATTRIBUTE::DwmwaUseImmersiveDarkModeBefore20h1, &useDarkMode, sizeof( useDarkMode ) );
+      = S_OK
+        == DwmSetWindowAttribute( unityWindowHandle, CUSTOM_DWMWINDOWATTRIBUTE::DWMA_USE_IMMERSIVE_DARKMODE_BEFORE20H1, &useDarkMode, sizeof( useDarkMode ) );
   bool borderColorResult = S_OK == DwmSetWindowAttribute( unityWindowHandle, CUSTOM_DWMWINDOWATTRIBUTE::DWMWA_BORDER_COLOR, &themeColor, sizeof( themeColor ) );
   bool captionColorResult
       = S_OK == DwmSetWindowAttribute( unityWindowHandle, CUSTOM_DWMWINDOWATTRIBUTE::DWMWA_CAPTION_COLOR, &themeColor, sizeof( themeColor ) );
@@ -103,42 +105,36 @@ extern bool SetWindowDarkMode( const bool darkMode ) {
   return immersiveDarkModeResult || immersiveDarkMode20h1Result || borderColorResult || captionColorResult || windowThemeResult || dwmColorChangedResult;
 }
 
-extern bool SendShellNotification( const char *message ) {
-  // hmm, somehow doesn't wanna work quite right
-  printInFile( "SendShellNotification(message: '%ls') - Windows", message );
+extern bool SendShellNotification( const char *title, const char *message ) {
+  printInFile( "SendShellNotification(title: '%ls', message: '%ls') - Windows", title, message );
 
-  HWND unityWindowHandle = FindWindow( "UnityWndClass", "Hollow Knight" );
-  printInFile( "HWND: %d", unityWindowHandle );
-
-  NOTIFYICONDATA notifyData{ sizeof( notifyData ) };
-  printInFile( "notifyData.cbSize: %d", notifyData.cbSize );
-  notifyData.hWnd = unityWindowHandle;
-  printInFile( "notifyData.hWnd: %d", notifyData.hWnd );
-  notifyData.uID = 0;
-  printInFile( "notifyData.uID: %d", notifyData.uID );
   memset( notifyData.szInfo, 0, sizeof( notifyData.szInfo ) );
   sprintf( notifyData.szInfo, "%ls", message );
   printInFile( "notifyData.szInfo: '%s'", notifyData.szInfo );
-  notifyData.dwState = NIS_HIDDEN;
-  printInFile( "notifyData.dwState: %d", notifyData.dwState );
-  notifyData.dwStateMask = NIS_HIDDEN;
-  printInFile( "notifyData.dwStateMask: %d", notifyData.dwStateMask );
-  notifyData.uTimeout = 30000;
-  printInFile( "notifyData.uTimeout: %d", notifyData.uTimeout );
   memset( notifyData.szInfoTitle, 0, sizeof( notifyData.szInfoTitle ) );
-  sprintf( notifyData.szInfoTitle, "%ls", "Hollow Knight" );
-  // strcpy(notifyData.szInfoTitle, "Hollow Knight");
+  sprintf( notifyData.szInfoTitle, "%ls", title );
   printInFile( "notifyData.szInfoTitle: '%s'", notifyData.szInfoTitle );
-  notifyData.dwInfoFlags = NIIF_INFO;
-  printInFile( "notifyData.dwInfoFlags: %d", notifyData.dwInfoFlags );
 
-  notifyData.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE | NIF_SHOWTIP | NIF_GUID;
-  printInFile( "notifyData.uFlags: %d", notifyData.uFlags );
+  // bool notifyDeleteResult = Shell_NotifyIcon( NIM_DELETE, &notifyData );
+  // printInFile( "notifyDeleteResult: %d", notifyDeleteResult );
+  bool notifyAddResult = Shell_NotifyIcon( NIM_ADD, &notifyData );
+  printInFile( "notifyAddResult: %d", notifyAddResult );
+  if( !notifyAddResult ) {
+    RemoveShellNotification();
+    notifyAddResult = Shell_NotifyIcon( NIM_ADD, &notifyData );
+    printInFile( "notifyAddResult: %d", notifyAddResult );
+  }
 
-  bool notifyResult = Shell_NotifyIcon( NIM_ADD, &notifyData );
-  printInFile( "notifyResult: %d", notifyResult );
+  return notifyAddResult;
+}
 
-  return notifyResult;
+extern bool RemoveShellNotification() {
+  printInFile( "RemoveShellNotification - Windows" );
+
+  bool notifyDeleteResult = Shell_NotifyIcon( NIM_DELETE, &notifyData );
+  printInFile( "notifyDeleteResult: %d", notifyDeleteResult );
+
+  return notifyDeleteResult;
 }
 
 extern bool DoFunStuff() {
@@ -164,8 +160,13 @@ extern bool SetWindowDarkMode( bool darkMode ) {
   return true;
 }
 
-extern bool SendShellNotification( const char *message ) {
-  printInFile( "SendShellNotification(message: '%s') - GNU", message );
+extern bool SendShellNotification( const char *title, const char *message ) {
+  printInFile( "SendShellNotification(title: '%s', message: '%s') - GNU", title, message );
+  return true;
+}
+
+extern bool RemoveShellNotification() {
+  printInFile( "RemoveShellNotification - GNU" );
   return true;
 }
 
