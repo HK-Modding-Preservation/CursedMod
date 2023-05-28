@@ -20,8 +20,8 @@ enum CUSTOM_DWMWINDOWATTRIBUTE : WORD {
   DWMWA_VISIBLE_FRAME_BORDER_THICKNESS,
   DWMWA_SYSTEMBACKDROP_TYPE
 };
-HWND unityWindowHandle;
-NOTIFYICONDATA notifyData;
+extern HWND unityWindowHandle;
+extern NOTIFYICONDATA notifyData;
 #elif defined( CM_MacOS )
 #elif defined( CM_Linux )
 //#include <libnotify/notify.h>
@@ -30,6 +30,7 @@ NOTIFYICONDATA notifyData;
 #endif
 
 extern "C" EXPORT bool Init();
+extern "C" EXPORT bool Deinit();
 extern "C" EXPORT bool SetWindowDarkMode( const bool darkMode );
 extern "C" EXPORT bool SendShellNotification( const char *title, const char *message );
 extern "C" EXPORT bool RemoveShellNotification();
