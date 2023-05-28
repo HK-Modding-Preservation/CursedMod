@@ -20,6 +20,8 @@ namespace CursedMod;
 [UsedImplicitly]
 public class CursedMod : Mod, ICustomMenuMod
 {
+    public override string GetVersion() => Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
     public CursedMod() : base("Cursed Mod")
     {
         NativeWrapper.InitLibrary();
@@ -40,7 +42,7 @@ public class CursedMod : Mod, ICustomMenuMod
     public Menu MenuRef;
     public Menu PrepareMenu()
     {
-        return new Menu("Graphic Options", new Element[]
+        return new Menu("Cursed Options", new Element[]
         {
             new TextPanel("Window Options"),
             new HorizontalOption("Dark Mode",
