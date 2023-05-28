@@ -31,6 +31,30 @@ public static class NativeWrapper
         };
     }
 
+    [DllImport("CursedModNative_Linux", EntryPoint = "Deinit", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
+    private static extern bool Native_Linux_Deinit();
+    private static bool Linux_Deinit_Wrap() => Native_Linux_Deinit();
+    [DllImport("CursedModNative_MacOS", EntryPoint = "Deinit", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
+    private static extern bool Native_MacOS_Deinit();
+    private static bool MacOS_Deinit_Wrap() => Native_MacOS_Deinit();
+    [DllImport("CursedModNative_Windows", EntryPoint = "Deinit", ExactSpelling = true, CharSet = CharSet.Unicode, PreserveSig = true)]
+    private static extern bool Native_Windows_Deinit();
+    private static bool Windows_Deinit_Wrap() => Native_Windows_Deinit();
+    internal static bool DeinitLibrary()
+    {
+        switch (SystemInfo.operatingSystemFamily)
+        {
+            case OperatingSystemFamily.Linux:
+                return Linux_Deinit_Wrap();
+            case OperatingSystemFamily.MacOSX:
+                return MacOS_Deinit_Wrap();
+            case OperatingSystemFamily.Windows:
+                return Windows_Deinit_Wrap();
+            default:
+                return false;
+        };
+    }
+
     [DllImport("CursedModNative_Linux", EntryPoint = "SetWindowDarkMode", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
     private static extern bool Native_Linux_SetWindowDarkMode(bool darkMode);
     private static bool Linux_SetWindowDarkMode_Wrap(bool darkMode) => Native_Linux_SetWindowDarkMode(darkMode); 

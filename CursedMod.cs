@@ -33,6 +33,7 @@ public class CursedMod : Mod, ICustomMenuMod
 
         ModHooks.ApplicationQuitHook += () => {
             NativeWrapper.RemoveShellNotification();
+            NativeWrapper.DeinitLibrary();
         };
 
         DebugLog("Initialized!");
