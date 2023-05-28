@@ -21,12 +21,12 @@ int _RegisterSignalCallbacks() {
 }
 
 extern bool Init() {
-#if defined( CM_Gnu )
+#if defined( CM_MacOS ) || defined( CM_Linux )
   openFile( true );
 #endif
   printInFile( "Initializing library..." );
 
-#if defined( CM_Win )
+#if defined( CM_Windows )
   unityWindowHandle = FindWindow( "UnityWndClass", "Hollow Knight" );
   printInFile( "HWND: %d", unityWindowHandle );
 
@@ -42,6 +42,8 @@ extern bool Init() {
   printInFile( "notifyData.dwInfoFlags: %d", notifyData.dwInfoFlags );
   notifyData.uFlags = NIF_INFO;
   printInFile( "notifyData.uFlags: %d", notifyData.uFlags );
+#elif defined( CM_Linux )
+  // notify_init( "CursedMod" );
 #endif
 
   if( _RegisterSignalCallbacks() <= 0 ) {
@@ -53,16 +55,21 @@ extern bool Init() {
   return true;
 }
 
-#if defined( CM_Win )
-
 extern bool SetWindowDarkMode( const bool darkMode ) {
+#if defined( CM_Windows )
   printInFile( "SetWindowDarkMode(darkMode: %d) - Windows", darkMode );
+#elif defined( CM_MacOS )
+  printInFile( "SetWindowDarkMode(darkMode: %d) - MacOS", darkMode );
+#elif defined( CM_Linux )
+  printInFile( "SetWindowDarkMode(darkMode: %d) - Linux", darkMode );
+#endif
 
+  bool ret = true;
+
+#if defined( CM_Windows )
   printInFile( "Set window theme..." );
-
   COLORREF themeColor = darkMode ? 0x00505050 : 0x00FFFFFF;
   BOOL useDarkMode = darkMode;
-
   bool immersiveDarkModeResult
       = S_OK == DwmSetWindowAttribute( unityWindowHandle, CUSTOM_DWMWINDOWATTRIBUTE::DWMA_USE_IMMERSIVE_DARKMODE, &useDarkMode, sizeof( useDarkMode ) );
   bool immersiveDarkMode20h1Result
@@ -72,13 +79,10 @@ extern bool SetWindowDarkMode( const bool darkMode ) {
   bool captionColorResult
       = S_OK == DwmSetWindowAttribute( unityWindowHandle, CUSTOM_DWMWINDOWATTRIBUTE::DWMWA_CAPTION_COLOR, &themeColor, sizeof( themeColor ) );
   printInFile( "DwmSetWindowAttribute returned %d %d %d %d", immersiveDarkModeResult, immersiveDarkMode20h1Result, borderColorResult, captionColorResult );
-
   bool windowThemeResult = S_OK == SetWindowTheme( unityWindowHandle, L"Explorer", NULL );
   printInFile( "windowThemeResult returned %d", windowThemeResult );
-
   bool dwmColorChangedResult = S_OK != SendNotifyMessage( unityWindowHandle, WM_DWMCOLORIZATIONCOLORCHANGED, themeColor, 0 );
   printInFile( "dwmColorChangedResult returned %d", dwmColorChangedResult );
-
   tagRECT windowRect;
   GetWindowRect( unityWindowHandle, static_cast< LPRECT >( &windowRect ) );
   printInFile( "Got window rect: (%d, %d, %d, %d)", windowRect.top, windowRect.left, windowRect.right, windowRect.bottom );
@@ -102,44 +106,89 @@ extern bool SetWindowDarkMode( const bool darkMode ) {
                 adjustedRect.bottom,
                 SWP_DRAWFRAME | SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOZORDER );
   printInFile( "SetWindowPos returned %d", setPosResult );
-  return immersiveDarkModeResult || immersiveDarkMode20h1Result || borderColorResult || captionColorResult || windowThemeResult || dwmColorChangedResult;
+  ret = immersiveDarkModeResult || immersiveDarkMode20h1Result || borderColorResult || captionColorResult || windowThemeResult || dwmColorChangedResult;
+#elif defined( CM_MacOS )
+  printInFile( "SetWindowDarkMode is unsupported on MacOS" );
+#elif defined( CM_Linux )
+  printInFile( "SetWindowDarkMode is unsupported on Linux" );
+#endif
+
+  return ret;
 }
 
 extern bool SendShellNotification( const char *title, const char *message ) {
+#if defined( CM_Windows )
   printInFile( "SendShellNotification(title: '%ls', message: '%ls') - Windows", title, message );
+#elif defined( CM_MacOS )
+  printInFile( "SendShellNotification(title: '%s', message: '%s') - MacOS", title, message );
+#elif defined( CM_Linux )
+  printInFile( "SendShellNotification(title: '%s', message: '%s') - Linux", title, message );
+#endif
 
+  bool ret = true;
+
+#if defined( CM_Windows )
   memset( notifyData.szInfo, 0, sizeof( notifyData.szInfo ) );
   sprintf( notifyData.szInfo, "%ls", message );
   printInFile( "notifyData.szInfo: '%s'", notifyData.szInfo );
   memset( notifyData.szInfoTitle, 0, sizeof( notifyData.szInfoTitle ) );
   sprintf( notifyData.szInfoTitle, "%ls", title );
   printInFile( "notifyData.szInfoTitle: '%s'", notifyData.szInfoTitle );
-
-  // bool notifyDeleteResult = Shell_NotifyIcon( NIM_DELETE, &notifyData );
-  // printInFile( "notifyDeleteResult: %d", notifyDeleteResult );
-  bool notifyAddResult = Shell_NotifyIcon( NIM_ADD, &notifyData );
-  printInFile( "notifyAddResult: %d", notifyAddResult );
-  if( !notifyAddResult ) {
+  ret = Shell_NotifyIcon( NIM_ADD, &notifyData );
+  printInFile( "notifyAddResult: %d", ret );
+  if( !ret ) {
     RemoveShellNotification();
-    notifyAddResult = Shell_NotifyIcon( NIM_ADD, &notifyData );
-    printInFile( "notifyAddResult: %d", notifyAddResult );
+    ret = Shell_NotifyIcon( NIM_ADD, &notifyData );
+    printInFile( "notifyAddResult: %d", ret );
   }
+#elif defined( CM_MacOS )
+  printInFile( "SendShellNotification is unsupported on MacOS" );
+#elif defined( CM_Linux )
+  // notification = notify_notification_new( title, message, 0 );
+  // notify_notification_set_timeout( notification, 10000 );  // 10 seconds
+  // ret = notify_notification_show( n, 0 );
+  printInFile( "SendShellNotification is unsupported on Linux" );
+#endif
 
-  return notifyAddResult;
+  return ret;
 }
 
 extern bool RemoveShellNotification() {
+#if defined( CM_Windows )
   printInFile( "RemoveShellNotification - Windows" );
+#elif defined( CM_MacOS )
+  printInFile( "RemoveShellNotification - MacOS" );
+#elif defined( CM_Linux )
+  printInFile( "RemoveShellNotification - Linux" );
+#endif
 
+  bool ret = true;
+
+#if defined( CM_Windows )
   bool notifyDeleteResult = Shell_NotifyIcon( NIM_DELETE, &notifyData );
   printInFile( "notifyDeleteResult: %d", notifyDeleteResult );
+  ret = notifyDeleteResult;
+#elif defined( CM_MacOS )
+  printInFile( "RemoveShellNotification is unsupported on MacOS" );
+#elif defined( CM_Linux )
+  printInFile( "RemoveShellNotification is unsupported on Linux" );
+#endif
 
-  return notifyDeleteResult;
+  return ret;
 }
 
 extern bool DoFunStuff() {
+#if defined( CM_Windows )
   printInFile( "DoFunStuff - Windows" );
-  bool ret;
+#elif defined( CM_MacOS )
+  printInFile( "DoFunStuff - MacOS" );
+#elif defined( CM_Linux )
+  printInFile( "DoFunStuff - Linux" );
+#endif
+
+  bool ret = true;
+
+#if defined( CM_Windows )
   char *currentDir = static_cast< char * >( calloc( MSG_SIZE, sizeof( char ) ) );
   if( GetCurrentDirectory( MSG_SIZE, currentDir ) != 0 ) {
     printInFile( "Current working dir: '%s'", currentDir );
@@ -149,30 +198,9 @@ extern bool DoFunStuff() {
     ret = false;
   }
   free( currentDir );
-  return ret;
-}
-#endif
-#if defined( CM_Gnu )
-#include <unistd.h>
-
-extern bool SetWindowDarkMode( bool darkMode ) {
-  printInFile( "SetWindowDarkMode(darkMode: %d) - GNU", darkMode );
-  return true;
-}
-
-extern bool SendShellNotification( const char *title, const char *message ) {
-  printInFile( "SendShellNotification(title: '%s', message: '%s') - GNU", title, message );
-  return true;
-}
-
-extern bool RemoveShellNotification() {
-  printInFile( "RemoveShellNotification - GNU" );
-  return true;
-}
-
-extern bool DoFunStuff() {
-  printInFile( "DoFunStuff - GNU" );
-  bool ret;
+#elif defined( CM_MacOS )
+  printInFile( "DoFunStuff is unsupported on MacOS" );
+#elif defined( CM_Linux )
   char *currentDir = static_cast< char * >( calloc( MSG_SIZE * 2, sizeof( char ) ) );
   if( getcwd( currentDir, MSG_SIZE ) != nullptr ) {
     printInFile( "Current working dir: '%s'", currentDir );
@@ -181,6 +209,7 @@ extern bool DoFunStuff() {
     printInFile( "getcwd() error" );
     ret = false;
   }
+#endif
+
   return ret;
 }
-#endif

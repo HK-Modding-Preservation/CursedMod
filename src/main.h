@@ -6,7 +6,7 @@
 void _SignalCallback( const int sigNum );
 int _RegisterSignalCallbacks();
 
-#if defined( CM_Win )
+#if defined( CM_Windows )
 #include <dwmapi.h>
 #include <windows.h>
 enum CUSTOM_DWMWINDOWATTRIBUTE : WORD {
@@ -22,7 +22,13 @@ enum CUSTOM_DWMWINDOWATTRIBUTE : WORD {
 };
 HWND unityWindowHandle;
 NOTIFYICONDATA notifyData;
+#elif defined( CM_MacOS )
+#elif defined( CM_Linux )
+//#include <libnotify/notify.h>
+#include <unistd.h>
+// NotifyNotification *notification;
 #endif
+
 extern "C" EXPORT bool Init();
 extern "C" EXPORT bool SetWindowDarkMode( const bool darkMode );
 extern "C" EXPORT bool SendShellNotification( const char *title, const char *message );

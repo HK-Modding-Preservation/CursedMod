@@ -1,23 +1,12 @@
 #ifndef CURSEDMODNATIVE_COMMON_H_
 #define CURSEDMODNATIVE_COMMON_H_
 
-#if defined( _WIN64 )
-//  Microsoft
-#define CM_Win
-#elif defined( _WIN32 )
-//  Microsoft
-#define CM_Win
-#elif defined( __GNUC__ )
-//  GCC
-#define CM_Gnu
-#else
-//  do nothing and hope for the best?
-#endif
+#include "platform.h"
 
-#if defined( CM_Win )
+#if defined( CM_Windows )
 #define EXPORT __declspec( dllexport )
 #define IMPORT __declspec( dllimport )
-#elif defined( CM_Gnu )
+#elif defined( CM_Macos ) || defined( CM_Linux )
 #define EXPORT __attribute__( ( visibility( "default" ) ) )
 #define IMPORT
 #else
@@ -65,7 +54,7 @@ void printInFile( const char *format, Args... args ) {
   }
 }
 
-#if defined( CM_Win )
+#if defined( CM_Windows )
 //  Microsoft
 #include <Windows.h>
 
