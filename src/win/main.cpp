@@ -4,7 +4,7 @@
 #include <string.h>
 
 HWND unityWindowHandle = 0;
-NOTIFYICONDATA notifyData = { sizeof( notifyData ) };
+NOTIFYICONDATA notifyData;
 
 extern bool Init() {
   openFile( true );
@@ -13,6 +13,7 @@ extern bool Init() {
   unityWindowHandle = FindWindow( "UnityWndClass", "Hollow Knight" );
   printInFile( "HWND: %d", unityWindowHandle );
 
+  notifyData.cbSize = sizeof( notifyData );
   printInFile( "notifyData.cbSize: %d", notifyData.cbSize );
   notifyData.hWnd = unityWindowHandle;
   printInFile( "notifyData.hWnd: %d", notifyData.hWnd );

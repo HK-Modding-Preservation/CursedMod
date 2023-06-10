@@ -6,7 +6,7 @@
 #if defined( CM_Windows )
 #define EXPORT __declspec( dllexport )
 #define IMPORT __declspec( dllimport )
-#elif defined( CM_Macos ) || defined( CM_Linux )
+#elif defined( CM_MacOS ) || defined( CM_Linux )
 #define EXPORT __attribute__( ( visibility( "default" ) ) )
 #define IMPORT
 #else

@@ -19,14 +19,14 @@ void closeFile() {
 }
 void printInFile( const char *msg ) {
   if( logFile != nullptr ) {
-    fprintf( logFile, msg );
+    fprintf( logFile, "%s", msg );
     fprintf( logFile, "\n" );
     fflush( logFile );
   }
 }
 
 #if defined( CM_Windows )
-extern BOOL WINAPI DllMain( HINSTANCE const dllModHandle, DWORD const callReason, LPVOID const reserved ) {
+extern BOOL WINAPI DllMain( HINSTANCE const, DWORD const callReason, LPVOID const ) {
   switch( callReason ) {
     case DLL_PROCESS_ATTACH:
       break;
