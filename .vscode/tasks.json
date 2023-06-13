@@ -25,7 +25,7 @@
         {
             "label": "Build for linux",
             "type": "shell",
-            "command": "zig c++ -o libCursedModNative_Linux.so -target x86_64-linux -fno-debug-macro -g0 -fno-standalone-debug -dynamic -shared -pthread -I D:/linux-libraries/usr.include.libmount -I D:/linux-libraries/usr.include.blkid -I D:/linux-libraries/usr.include.glib-2.0 -I D:/linux-libraries/usr.lib.x86_64-linux-gnu.glib-2.0.include -L D:/linux-libraries/bin -l gio-2.0 -l gobject-2.0 -l glib-2.0 -std=c++20 -stdlib=libc++ -Wall -Wextra -Xlinker -s -Xlinker -S ../src/common.cpp ../src/main.cpp ../src/lin/main.cpp",
+            "command": "zig c++ -o libCursedModNative_Linux.so -target x86_64-linux -fno-debug-macro -g0 -fno-standalone-debug -dynamic -shared -pthread -I D:/linux-libraries/usr/include/libmount -I D:/linux-libraries/usr/include/blkid -I D:/linux-libraries/usr/include/glib-2.0 -I D:/linux-libraries/usr/lib/x86_64-linux-gnu/glib-2.0/include -L D:/linux-libraries/bin -l gio-2.0 -l gobject-2.0 -l glib-2.0 -std=c++20 -stdlib=libc++ -Wall -Wextra -Xlinker -s -Xlinker -S ../src/common.cpp ../src/main.cpp ../src/lin/main.cpp",
             "options": {
                 "cwd": "${workspaceFolder}/out",
                 "env": {
@@ -71,7 +71,7 @@
         {
             "label": "Print defines for linux",
             "type": "shell",
-            "command": "zig c++ -o defines_linux.txt -target x86_64-linux -fno-debug-macro -g0 -fno-standalone-debug -dynamic -shared -pthread -I D:/linux-libraries/usr.include.libmount -I D:/linux-libraries/usr.include.blkid -I D:/linux-libraries/usr.include.glib-2.0 -I D:/linux-libraries/usr.lib.x86_64-linux-gnu.glib-2.0.include -L D:/linux-libraries/bin -l gio-2.0 -l gobject-2.0 -l glib-2.0 -std=c++20 -stdlib=libc++ -Wall -Wextra -dM -E ../src/common.cpp",
+            "command": "zig c++ -o defines_linux.txt -target x86_64-linux -fno-debug-macro -g0 -fno-standalone-debug -dynamic -shared -pthread -I D:/linux-libraries/usr/include/libmount -I D:/linux-libraries/usr/include/blkid -I D:/linux-libraries/usr/include/glib-2.0 -I D:/linux-libraries/usr/lib/x86_64-linux-gnu/glib-2.0/include -L D:/linux-libraries/bin -l gio-2.0 -l gobject-2.0 -l glib-2.0 -std=c++20 -stdlib=libc++ -Wall -Wextra -dM -E ../src/common.cpp",
             "options": {
                 "cwd": "${workspaceFolder}/out",
                 "env": {
