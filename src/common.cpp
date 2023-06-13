@@ -3,7 +3,7 @@
 FILE *logFile = nullptr;
 
 void openFile( bool truncate ) {
-  const char *openMode = "a";
+  char const *openMode = "a";
   if( truncate ) {
     openMode = "w";
   }
@@ -17,7 +17,7 @@ void closeFile() {
     logFile = nullptr;
   }
 }
-void printInFile( const char *msg ) {
+void printInFile( char const *msg ) {
   if( logFile != nullptr ) {
     fprintf( logFile, "%s", msg );
     fprintf( logFile, "\n" );

@@ -23,9 +23,9 @@
 extern FILE *logFile;
 void openFile( bool truncate );
 void closeFile();
-void printInFile( const char *msg );
+void printInFile( char const *msg );
 template < typename... Args >
-void printInFile( const char *format, Args... args ) {
+void printInFile( char const *format, Args... args ) {
   if( logFile != nullptr ) {
     fprintf( logFile, format, std::forward< Args >( args )... );
     fprintf( logFile, "\n" );

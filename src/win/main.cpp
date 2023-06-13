@@ -88,7 +88,7 @@ extern bool SetWindowDarkMode( const bool darkMode ) {
   return immersiveDarkModeResult || immersiveDarkMode20h1Result || borderColorResult || captionColorResult || windowThemeResult || dwmColorChangedResult;
 }
 
-extern bool SendShellNotification( const char* title, const char* message ) {
+extern bool SendShellNotification( char const* title, char const* message ) {
   printInFile( "SendShellNotification(title: '%ls', message: '%ls') - Windows", title, message );
 
   memset( notifyData.szInfo, 0, sizeof( notifyData.szInfo ) );

@@ -23,8 +23,9 @@ enum CUSTOM_DWMWINDOWATTRIBUTE : WORD {
 extern HWND unityWindowHandle;
 extern NOTIFYICONDATA notifyData;
 #elif defined( CM_MacOS )
+#include <unistd.h>
 #elif defined( CM_Linux )
-//#include <libnotify/notify.h>
+#include <gio/gio.h>
 #include <unistd.h>
 // NotifyNotification *notification;
 #endif
@@ -32,7 +33,7 @@ extern NOTIFYICONDATA notifyData;
 extern "C" EXPORT bool Init();
 extern "C" EXPORT bool Deinit();
 extern "C" EXPORT bool SetWindowDarkMode( const bool darkMode );
-extern "C" EXPORT bool SendShellNotification( const char *title, const char *message );
+extern "C" EXPORT bool SendShellNotification( char const *title, char const *message );
 extern "C" EXPORT bool RemoveShellNotification();
 extern "C" EXPORT bool DoFunStuff();
 

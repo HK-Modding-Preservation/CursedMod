@@ -32,7 +32,7 @@ extern bool SetWindowDarkMode( const bool darkMode ) {
   return false;
 }
 
-extern bool SendShellNotification( const char* title, const char* message ) {
+extern bool SendShellNotification( char const* title, char const* message ) {
   printInFile( "SendShellNotification(title: '%s', message: '%s') - MacOS", title, message );
 
   printInFile( "SendShellNotification is unsupported on MacOS" );

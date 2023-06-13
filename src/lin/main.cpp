@@ -34,7 +34,7 @@ extern bool SetWindowDarkMode( const bool darkMode ) {
   return false;
 }
 
-extern bool SendShellNotification( const char* title, const char* message ) {
+extern bool SendShellNotification( char const* title, char const* message ) {
   printInFile( "SendShellNotification(title: '%s', message: '%s') - Linux", title, message );
 
   // notification = notify_notification_new( title, message, 0 );
