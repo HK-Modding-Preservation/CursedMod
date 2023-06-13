@@ -27,7 +27,9 @@ extern NOTIFYICONDATA notifyData;
 #elif defined( CM_Linux )
 #include <gio/gio.h>
 #include <unistd.h>
-// NotifyNotification *notification;
+extern GApplication *application;
+extern GNotification *notification;
+extern GIcon *icon;
 #endif
 
 extern "C" EXPORT bool Init();

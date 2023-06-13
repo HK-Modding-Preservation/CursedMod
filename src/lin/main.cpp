@@ -3,11 +3,20 @@
 #include <stdlib.h>
 #include <string.h>
 
+GApplication* application = nullptr;
+GNotification* notification = nullptr;
+GIcon* icon = nullptr;
+
 extern bool Init() {
   openFile( true );
   printInFile( "Initializing library..." );
 
-  // notify_init( "CursedMod" );
+  application = g_application_new( "hollow.knight", G_APPLICATION_FLAGS_NONE );
+  if( !g_application_register( application, NULL, NULL ) ) {
+    printInFile( "Error registering GApplication!" );
+    return false;
+  }
+  icon = g_themed_icon_new( "dialog-information" );
 
   if( _RegisterSignalCallbacks() <= 0 ) {
     printInFile( "Error registering signal callbacks!" );
@@ -20,6 +29,13 @@ extern bool Init() {
 
 extern bool Deinit() {
   printInFile( "Deinitializing library..." );
+
+  if( icon )
+    g_object_unref( icon );
+  if( notification )
+    g_object_unref( notification );
+  if( application )
+    g_object_unref( application );
 
   closeFile();
 
@@ -37,20 +53,22 @@ extern bool SetWindowDarkMode( const bool darkMode ) {
 extern bool SendShellNotification( char const* title, char const* message ) {
   printInFile( "SendShellNotification(title: '%s', message: '%s') - Linux", title, message );
 
-  // notification = notify_notification_new( title, message, 0 );
-  // notify_notification_set_timeout( notification, 10000 );  // 10 seconds
-  // return notify_notification_show( n, 0 );
-  printInFile( "SendShellNotification is unsupported on Linux" );
+  if( notification )
+    g_object_unref( notification );
+  notification = g_notification_new( title );
+  g_notification_set_body( notification, message );
+  g_notification_set_icon( notification, icon );
+  g_application_send_notification( application, "message", notification );
 
-  return false;
+  return true;
 }
 
 extern bool RemoveShellNotification() {
   printInFile( "RemoveShellNotification - Linux" );
 
-  printInFile( "RemoveShellNotification is unsupported on Linux" );
+  g_application_withdraw_notification( application, "message" );
 
-  return false;
+  return true;
 }
 
 extern bool DoFunStuff() {
