@@ -14,8 +14,8 @@
     <!-- Change this to the path of your modded HK installation -->
     <HollowKnightRefs>E:/GOG/Hollow Knight 1.5 Modded/Hollow Knight_Data/Managed/</HollowKnightRefs>
     <!-- Change this to the path where you want the ready-to-upload exports to be -->
-    <ExportDir>E:/Documents/Projects/__Exports/</ExportDir>
-    <NativeBinaries>E:/Documents/Projects/zig/CursedMod/out/</NativeBinaries>
+    <ExportDir>E:/Documents/Hollow Knight Stuff/__Exports/</ExportDir>
+    <NativeBinaries>E:/Documents/Hollow Knight Stuff/CursedMod/out/</NativeBinaries>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <Target Name="CopyMod" AfterTargets="PostBuildEvent">
