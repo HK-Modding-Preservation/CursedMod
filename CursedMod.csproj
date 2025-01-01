@@ -6,7 +6,7 @@
     <AssemblyName>CursedMod</AssemblyName>
     <AssemblyTitle>CursedMod</AssemblyTitle>
     <Description>A Hollow Knight Mod</Description>
-    <Copyright>Copyright © SFGrenade 2024</Copyright>
+    <Copyright>Copyright © SFGrenade 2025</Copyright>
     <AssemblyVersion>1.5.0.0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <ImplicitUsings>false</ImplicitUsings>
@@ -14,9 +14,11 @@
     <OutputPath>bin/$(Configuration)/</OutputPath>
     <LangVersion>latest</LangVersion>
     <PathMap>$(MSBuildProjectDirectory)=source</PathMap>
+    <AssemblyOriginatorKeyFile>../sgKey.snk</AssemblyOriginatorKeyFile>
     <HollowKnightRefs />
     <ExportDir />
     <NativeBinaries />
+    <!--<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
   </PropertyGroup>
   <Import Project="LocalOverrides.targets" Condition="Exists('LocalOverrides.targets')" />
   <Import Project="build_steps.targets" />
