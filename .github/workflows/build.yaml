@@ -102,34 +102,34 @@ jobs:
         with:
           path: artifacts
 
-      - name: Checkout master
+      - name: Checkout Cs
         uses: actions/checkout@v4
         with:
-          ref: master
-          path: master
+          ref: C#
+          path: Cs
 
       - name: Setup MAPI
         uses: BadMagic100/setup-hk@v2
         with:
           apiPath: HkRefs
-          dependencyFilePath: master/ModDependencies.txt
+          dependencyFilePath: Cs/ModDependencies.txt
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
 
-      - name: Install dependencies master
+      - name: Install dependencies Cs
         run: dotnet restore
-        working-directory: master
+        working-directory: Cs
 
-      - name: Build master
+      - name: Build Cs
         run: dotnet build -c Release
-        working-directory: master
+        working-directory: Cs
 
-      - name: Prepare master artifacts for release
+      - name: Prepare Cs artifacts for release
         uses: actions/upload-artifact@v4
         with:
-          name: Publish-Master
-          path: master/bin/Publish
+          name: Publish-Cs
+          path: Cs/bin/Publish
 
   release:
     needs:
@@ -148,7 +148,7 @@ jobs:
         # this assumes that an MSBuild task that writes the SHA256 of the zip file to SHA.txt, and the mod version (usually
         # the same as the assembly version) to version.txt. The contents of these files are read to step outputs for use in release
         run: |
-          $sha = (Get-Content artifacts/Publish-Master/CursedMod/SHA.txt)[3]
+          $sha = (Get-Content artifacts/Publish-Cs/CursedMod/SHA.txt)[3]
           $ver = "${{  github.ref_name }}"
           echo "archiveHash=$sha" >> $env:GITHUB_OUTPUT
           echo "buildVersion=$ver" >> $env:GITHUB_OUTPUT
@@ -168,5 +168,5 @@ jobs:
             - CursedMod.dll
               - the mod, also inside CursedMod.zip
           files: |
-            artifacts/Publish-Master/CursedMod/CursedMod.zip
-            artifacts/Publish-Master/CursedMod/CursedMod.dll
+            artifacts/Publish-Cs/CursedMod/CursedMod.zip
+            artifacts/Publish-Cs/CursedMod/CursedMod.dll
