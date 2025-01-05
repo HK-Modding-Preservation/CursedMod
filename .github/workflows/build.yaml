@@ -133,7 +133,7 @@ jobs:
 
   release:
     needs:
-      - build
+      - build-cs
 
     runs-on: windows-latest
 
