@@ -57,8 +57,8 @@ jobs:
       - name: Setup xmake
         uses: xmake-io/github-action-setup-xmake@v1.2.2
         with:
-          xmake-version: branch@dev
-          #xmake-version: latest
+          #xmake-version: branch@dev
+          xmake-version: latest
           actions-cache-folder: .xmake-cache-W${{ steps.cache_key.outputs.key }}
 
       # Update xmake repository (in order to have the file that will be cached)
@@ -84,11 +84,11 @@ jobs:
         run: xmake install -vDo _dest/ --group=LIBS
         working-directory: Cpp
 
-      - name: Prepare master artifacts for release
+      - name: Prepare Cpp artifacts for release
         uses: actions/upload-artifact@v4
         with:
           name: Cpp-${{ matrix.runner.name }}
-          path: Cpp/_dest/bin/*
+          path: Cpp/_dest/*
 
   #build-cs:
   #  runs-on: windows-latest
