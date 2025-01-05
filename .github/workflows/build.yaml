@@ -30,7 +30,12 @@ jobs:
         shell: bash
 
       - name: Set vs_runtime string
-        run: echo "VS_RUNTIME_STRING=MD" >> $GITHUB_ENV
+        run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            echo "VS_RUNTIME_STRING=--runtimes=MD" >> $GITHUB_ENV
+          else
+            echo "VS_RUNTIME_STRING= " >> $GITHUB_ENV
+          fi
         shell: bash
 
       - name: Set OUTPUT_FILE variable
@@ -62,7 +67,8 @@ jobs:
         working-directory: Cpp
 
       - name: Configure xmake and install dependencies
-        run: xmake config -vD --arch=${{ matrix.runner.arch }} --mode=${{ matrix.mode }} --kind=${{ matrix.kind }} --vs_runtime=${{ env.VS_RUNTIME_STRING }} --yes --policies=package.precompiled:n
+        run: |
+          xmake config -vD --arch=${{ matrix.runner.arch }} --mode=${{ matrix.mode }} --kind=${{ matrix.kind }} ${{ env.VS_RUNTIME_STRING }} --yes --policies=package.precompiled:n
         working-directory: Cpp
 
       - name: Build all targets
