@@ -81,14 +81,14 @@ jobs:
       #  working-directory: Cpp
 
       - name: Install
-        run: xmake install -vDo ../dest/ --group=EXES
+        run: xmake install -vDo _dest/ --group=LIBS
         working-directory: Cpp
 
       - name: Prepare master artifacts for release
         uses: actions/upload-artifact@v4
         with:
           name: Cpp-${{ matrix.runner.name }}
-          path: dest
+          path: Cpp/_dest/bin/*
 
   #build-cs:
   #  runs-on: windows-latest
