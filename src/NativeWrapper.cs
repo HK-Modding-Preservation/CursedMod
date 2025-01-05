@@ -7,13 +7,13 @@ namespace CursedMod;
 
 public static class NativeWrapper
 {
-    [DllImport("CursedModNative", EntryPoint = "Init", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
+    [DllImport("CursedModNative_Linux", EntryPoint = "Init", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
     private static extern bool Native_Linux_Init();
     private static bool Linux_Init_Wrap() => Native_Linux_Init();
-    [DllImport("CursedModNative", EntryPoint = "Init", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
+    [DllImport("CursedModNative_MacOS", EntryPoint = "Init", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
     private static extern bool Native_MacOS_Init();
     private static bool MacOS_Init_Wrap() => Native_MacOS_Init();
-    [DllImport("CursedModNative", EntryPoint = "Init", ExactSpelling = true, CharSet = CharSet.Unicode, PreserveSig = true)]
+    [DllImport("CursedModNative_Windows", EntryPoint = "Init", ExactSpelling = true, CharSet = CharSet.Unicode, PreserveSig = true)]
     private static extern bool Native_Windows_Init();
     private static bool Windows_Init_Wrap() => Native_Windows_Init();
     internal static bool InitLibrary()
@@ -31,13 +31,13 @@ public static class NativeWrapper
         };
     }
 
-    [DllImport("CursedModNative", EntryPoint = "Deinit", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
+    [DllImport("CursedModNative_Linux", EntryPoint = "Deinit", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
     private static extern bool Native_Linux_Deinit();
     private static bool Linux_Deinit_Wrap() => Native_Linux_Deinit();
-    [DllImport("CursedModNative", EntryPoint = "Deinit", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
+    [DllImport("CursedModNative_MacOS", EntryPoint = "Deinit", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
     private static extern bool Native_MacOS_Deinit();
     private static bool MacOS_Deinit_Wrap() => Native_MacOS_Deinit();
-    [DllImport("CursedModNative", EntryPoint = "Deinit", ExactSpelling = true, CharSet = CharSet.Unicode, PreserveSig = true)]
+    [DllImport("CursedModNative_Windows", EntryPoint = "Deinit", ExactSpelling = true, CharSet = CharSet.Unicode, PreserveSig = true)]
     private static extern bool Native_Windows_Deinit();
     private static bool Windows_Deinit_Wrap() => Native_Windows_Deinit();
     internal static bool DeinitLibrary()
@@ -55,13 +55,13 @@ public static class NativeWrapper
         };
     }
 
-    [DllImport("CursedModNative", EntryPoint = "SetWindowDarkMode", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
+    [DllImport("CursedModNative_Linux", EntryPoint = "SetWindowDarkMode", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
     private static extern bool Native_Linux_SetWindowDarkMode(bool darkMode);
     private static bool Linux_SetWindowDarkMode_Wrap(bool darkMode) => Native_Linux_SetWindowDarkMode(darkMode); 
-    [DllImport("CursedModNative", EntryPoint = "SetWindowDarkMode", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
+    [DllImport("CursedModNative_MacOS", EntryPoint = "SetWindowDarkMode", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
     private static extern bool Native_MacOS_SetWindowDarkMode(bool darkMode);
     private static bool MacOS_SetWindowDarkMode_Wrap(bool darkMode) => Native_MacOS_SetWindowDarkMode(darkMode);
-    [DllImport("CursedModNative", EntryPoint = "SetWindowDarkMode", ExactSpelling = true, CharSet = CharSet.Unicode, PreserveSig = true)]
+    [DllImport("CursedModNative_Windows", EntryPoint = "SetWindowDarkMode", ExactSpelling = true, CharSet = CharSet.Unicode, PreserveSig = true)]
     private static extern bool Native_Windows_SetWindowDarkMode(bool darkMode);
     private static bool Windows_SetWindowDarkMode_Wrap(bool darkMode) => Native_Windows_SetWindowDarkMode(darkMode);
     internal static bool SetWindowDarkMode(bool darkMode)
@@ -79,13 +79,13 @@ public static class NativeWrapper
         };
     }
 
-    [DllImport("CursedModNative", EntryPoint = "SendShellNotification", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
+    [DllImport("CursedModNative_Linux", EntryPoint = "SendShellNotification", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
     private static extern bool Native_Linux_SendShellNotification(string title, string message);
     private static bool Linux_SendShellNotification_Wrap(string title, string message) => Native_Linux_SendShellNotification(title, message); 
-    [DllImport("CursedModNative", EntryPoint = "SendShellNotification", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
+    [DllImport("CursedModNative_MacOS", EntryPoint = "SendShellNotification", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
     private static extern bool Native_MacOS_SendShellNotification(string title, string message);
     private static bool MacOS_SendShellNotification_Wrap(string title, string message) => Native_MacOS_SendShellNotification(title, message);
-    [DllImport("CursedModNative", EntryPoint = "SendShellNotification", ExactSpelling = true, CharSet = CharSet.Unicode, PreserveSig = true)]
+    [DllImport("CursedModNative_Windows", EntryPoint = "SendShellNotification", ExactSpelling = true, CharSet = CharSet.Unicode, PreserveSig = true)]
     private static extern bool Native_Windows_SendShellNotification(string title, string message);
     private static bool Windows_SendShellNotification_Wrap(string title, string message) => Native_Windows_SendShellNotification(title, message);
     internal static bool SendShellNotification(string title, string message)
@@ -103,13 +103,13 @@ public static class NativeWrapper
         };
     }
 
-    [DllImport("CursedModNative", EntryPoint = "RemoveShellNotification", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
+    [DllImport("CursedModNative_Linux", EntryPoint = "RemoveShellNotification", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
     private static extern bool Native_Linux_RemoveShellNotification();
     private static bool Linux_RemoveShellNotification_Wrap() => Native_Linux_RemoveShellNotification(); 
-    [DllImport("CursedModNative", EntryPoint = "RemoveShellNotification", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
+    [DllImport("CursedModNative_MacOS", EntryPoint = "RemoveShellNotification", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
     private static extern bool Native_MacOS_RemoveShellNotification();
     private static bool MacOS_RemoveShellNotification_Wrap() => Native_MacOS_RemoveShellNotification();
-    [DllImport("CursedModNative", EntryPoint = "RemoveShellNotification", ExactSpelling = true, CharSet = CharSet.Unicode, PreserveSig = true)]
+    [DllImport("CursedModNative_Windows", EntryPoint = "RemoveShellNotification", ExactSpelling = true, CharSet = CharSet.Unicode, PreserveSig = true)]
     private static extern bool Native_Windows_RemoveShellNotification();
     private static bool Windows_RemoveShellNotification_Wrap() => Native_Windows_RemoveShellNotification();
     internal static bool RemoveShellNotification()
@@ -127,13 +127,13 @@ public static class NativeWrapper
         };
     }
 
-    [DllImport("CursedModNative", EntryPoint = "DoFunStuff", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
+    [DllImport("CursedModNative_Linux", EntryPoint = "DoFunStuff", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
     private static extern bool Native_Linux_DoFunStuff();
     private static bool Linux_DoFunStuff_Wrap() => Native_Linux_DoFunStuff(); 
-    [DllImport("CursedModNative", EntryPoint = "DoFunStuff", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
+    [DllImport("CursedModNative_MacOS", EntryPoint = "DoFunStuff", ExactSpelling = true, CharSet = CharSet.Ansi, PreserveSig = true)]
     private static extern bool Native_MacOS_DoFunStuff();
     private static bool MacOS_DoFunStuff_Wrap() => Native_MacOS_DoFunStuff();
-    [DllImport("CursedModNative", EntryPoint = "DoFunStuff", ExactSpelling = true, CharSet = CharSet.Unicode, PreserveSig = true)]
+    [DllImport("CursedModNative_Windows", EntryPoint = "DoFunStuff", ExactSpelling = true, CharSet = CharSet.Unicode, PreserveSig = true)]
     private static extern bool Native_Windows_DoFunStuff();
     private static bool Windows_DoFunStuff_Wrap() => Native_Windows_DoFunStuff();
     internal static bool DoFunStuff()
