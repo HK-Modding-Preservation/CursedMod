@@ -1,0 +1,204 @@
+name: Full Build
+
+permissions:
+  contents: write
+
+# Trigger when pushing tags
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build-cpp:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner:
+          - { name: linux, os: ubuntu-latest, arch: x86_64 }
+          - { name: macos, os: macos-13, arch: x86_64 }
+          - { name: windows, os: windows-latest, arch: x64 }
+        kind: [shared]
+        mode: [releasedbg]
+
+    runs-on: ${{ matrix.runner.os }}
+
+    steps:
+      - name: Get current date as package key
+        id: cache_key
+        run: echo "key=$(date +'%W')_${{ matrix.runner.os }}_${{ matrix.runner.arch }}_${{ matrix.kind }}_${{ matrix.mode }}" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Set vs_runtime string
+        run: echo "VS_RUNTIME_STRING=MD" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Set OUTPUT_FILE variable
+        run: echo "OUTPUT_FILE=${{ matrix.runner.name }}.zip" >> $GITHUB_ENV
+        shell: bash
+
+      # Force xmake to a specific folder (for cache)
+      - name: Set xmake env
+        run: echo "XMAKE_GLOBALDIR=${{ runner.workspace }}/xmake-global" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Checkout C++
+        uses: actions/checkout@v4
+        with:
+          ref: C++
+          path: Cpp
+
+      # Install xmake
+      - name: Setup xmake
+        uses: xmake-io/github-action-setup-xmake@v1.2.2
+        with:
+          xmake-version: branch@dev
+          #xmake-version: latest
+          actions-cache-folder: .xmake-cache-W${{ steps.cache_key.outputs.key }}
+
+      # Update xmake repository (in order to have the file that will be cached)
+      - name: Update xmake repository
+        run: xmake repo --update -vD
+        working-directory: Cpp
+
+      - name: Configure xmake and install dependencies
+        run: xmake config -vD --arch=${{ matrix.runner.arch }} --mode=${{ matrix.mode }} --kind=${{ matrix.kind }} --vs_runtime=${{ env.VS_RUNTIME_STRING }} --yes --policies=package.precompiled:n
+        working-directory: Cpp
+
+      - name: Build all targets
+        run: xmake build -vD -a
+        working-directory: Cpp
+
+      ## We can't do --group=TESTS because every test has its own output
+      #- name: Run tests
+      #  run: xmake run -vD --group=TESTS
+      #  working-directory: Cpp
+
+      - name: Install
+        run: xmake install -vDo ../dest/ --group=EXES
+        working-directory: Cpp
+
+      - name: Prepare master artifacts for release
+        uses: actions/upload-artifact@v4
+        with:
+          name: Cpp-${{ matrix.runner.name }}
+          path: dest
+
+  #build-cs:
+  #  runs-on: windows-latest
+
+  #  needs:
+  #    - build-cpp
+
+  #  steps:
+  #    - name: Checkout master
+  #      uses: actions/checkout@v4
+  #      with:
+  #        ref: master
+  #        path: master
+
+  #    - name: Checkout MonoBehaviour
+  #      uses: actions/checkout@v4
+  #      with:
+  #        ref: MonoBehaviour
+  #        path: MonoBehaviour
+
+  #    - name: Checkout Unity
+  #      uses: actions/checkout@v4
+  #      with:
+  #        ref: Unity
+  #        path: Unity
+
+  #    - name: Setup MAPI
+  #      uses: BadMagic100/setup-hk@v2
+  #      with:
+  #        apiPath: HkRefs
+  #        dependencyFilePath: master/ModDependencies.txt
+
+  #    - name: Setup .NET
+  #      uses: actions/setup-dotnet@v4
+
+  #    - name: Install dependencies MonoBehaviour
+  #      run: dotnet restore
+  #      working-directory: MonoBehaviour
+
+  #    - name: Build MonoBehaviour
+  #      run: dotnet build -c Release
+  #      working-directory: MonoBehaviour
+
+  #    - name: Fetch SFCoreUnity for Unity project
+  #      uses: dsaltares/fetch-gh-release-asset@master
+  #      with:
+  #        repo: 'SFGrenade/SFCore'
+  #        file: 'SFCoreUnity.dll'
+  #        target: 'Unity/Assets/Assemblies/SFCore.dll'
+  #        token: ${{ secrets.GITHUB_TOKEN }}
+
+  #    - name: Build Unity
+  #      uses: game-ci/unity-builder@v4
+  #      env:
+  #        UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+  #        UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+  #        UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+  #      with:
+  #        targetPlatform: StandaloneWindows64
+  #        projectPath: Unity
+  #        buildsPath: Unity/build
+  #        buildMethod: CreateAssetBundles.BuildAllAssetBundlesCompressed
+
+  #    # commit assetbundle to repo?
+  #    # wouldn't work anyway since we already have a tag though
+
+  #    - name: Install dependencies master
+  #      run: dotnet restore
+  #      working-directory: master
+
+  #    - name: Build master
+  #      run: dotnet build -c Release
+  #      working-directory: master
+
+  #    - name: Prepare master artifacts for release
+  #      uses: actions/upload-artifact@v4
+  #      with:
+  #        name: Publish-Master
+  #        path: master/bin/Publish
+
+  #release:
+  #  needs:
+  #    - build
+
+  #  runs-on: windows-latest
+
+  #  steps:
+  #    - name: Download Artifacts
+  #      uses: actions/download-artifact@v4
+  #      with:
+  #        path: artifacts
+
+  #    - name: Get build details
+  #      id: details
+  #      # this assumes that an MSBuild task that writes the SHA256 of the zip file to SHA.txt, and the mod version (usually
+  #      # the same as the assembly version) to version.txt. The contents of these files are read to step outputs for use in release
+  #      run: |
+  #        $sha = (Get-Content artifacts/Publish-Master/Ancinia/SHA.txt)[3]
+  #        $ver = "${{  github.ref_name }}"
+  #        echo "archiveHash=$sha" >> $env:GITHUB_OUTPUT
+  #        echo "buildVersion=$ver" >> $env:GITHUB_OUTPUT
+
+  #    - name: Release
+  #      uses: softprops/action-gh-release@v2
+  #      with:
+  #        draft: false
+  #        generate_release_notes: true
+  #        fail_on_unmatched_files: true
+  #        tag_name: ${{ steps.details.outputs.buildVersion }}
+  #        body: |
+  #          SHA256 of Ancinia.zip: ${{ steps.details.outputs.archiveHash }}  
+  #          Attachments:  
+  #          - Ancinia.zip
+  #            - to be used for the ModInstaller
+  #          - Ancinia.dll
+  #            - the mod, also inside Ancinia.zip
+  #        files: |
+  #          artifacts/Publish-Master/Ancinia/Ancinia.zip
+  #          artifacts/Publish-Master/Ancinia/Ancinia.dll
