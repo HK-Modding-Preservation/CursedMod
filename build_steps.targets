@@ -12,8 +12,9 @@
         <!-- Copy built files (.dll, .pdb & .xml as well as optional dep libs) into the export folder for zipping -->
         <Copy Condition="'$(DocumentationFile)'!=''" SourceFiles="ReadMe.md;$(TargetPath);$(TargetDir)/$(TargetName).pdb;$(TargetDir)/$(TargetName).xml;$(TargetName).dll.config" DestinationFolder="$(ExportDir)/$(TargetName)/zip/" />
         <Copy Condition="'$(DocumentationFile)'==''" SourceFiles="ReadMe.md;$(TargetPath);$(TargetDir)/$(TargetName).pdb;$(TargetName).dll.config" DestinationFolder="$(ExportDir)/$(TargetName)/zip/" />
-        <Copy SourceFiles="$(NativeBinaries)/CursedModNative_Windows.dll" DestinationFolder="$(ExportDir)/$(TargetName)/zip/Com/" />
-        <Copy SourceFiles="$(NativeBinaries)/libCursedModNative_Linux.so;$(NativeBinaries)/libCursedModNative_MacOS.dylib" DestinationFolder="$(ExportDir)/$(TargetName)/zip/" />
+        <Copy SourceFiles="$(NativeBinaries)/Cpp-linux/lib/libCursedModNative.so" DestinationFolder="$(ExportDir)/$(TargetName)/zip/" />
+        <Copy SourceFiles="$(NativeBinaries)/Cpp-linux/lib/libCursedModNative.dylib" DestinationFolder="$(ExportDir)/$(TargetName)/zip/" />
+        <Copy SourceFiles="$(NativeBinaries)/Cpp-linux/bin/CursedModNative.dll" DestinationFolder="$(ExportDir)/$(TargetName)/zip/Com/" />
 
         <!-- Zip the release package -->
         <ZipDirectory SourceDirectory="$(ExportDir)/$(TargetName)/zip/" DestinationFile="$(ExportDir)/$(TargetName)/$(TargetName).zip" />
@@ -42,7 +43,8 @@
         <!-- Copy built files (.dll, .pdb & .xml as well as optional dep libs) into the game's mod folder -->
         <Copy Condition="'$(DocumentationFile)'!=''" SourceFiles="$(TargetPath);$(TargetDir)/$(TargetName).pdb;$(TargetDir)/$(TargetName).xml;$(TargetName).dll.config" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)/" />
         <Copy Condition="'$(DocumentationFile)'==''" SourceFiles="$(TargetPath);$(TargetDir)/$(TargetName).pdb;$(TargetName).dll.config" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)/" />
-        <Copy SourceFiles="$(NativeBinaries)/CursedModNative_Windows.dll" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)/Com/" />
-        <Copy SourceFiles="$(NativeBinaries)/libCursedModNative_Linux.so;$(NativeBinaries)/libCursedModNative_MacOS.dylib" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)/" />
+        <Copy SourceFiles="$(NativeBinaries)/Cpp-linux/lib/libCursedModNative.so" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)/" />
+        <Copy SourceFiles="$(NativeBinaries)/Cpp-macos/lib/libCursedModNative.dylib" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)/" />
+        <Copy SourceFiles="$(NativeBinaries)/Cpp-windows/bin/CursedModNative.dll" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)/Com/" />
     </Target>
 </Project>

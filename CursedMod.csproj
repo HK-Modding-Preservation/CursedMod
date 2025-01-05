@@ -17,7 +17,7 @@
     <AssemblyOriginatorKeyFile>../sgKey.snk</AssemblyOriginatorKeyFile>
     <HollowKnightRefs>../HkRefs</HollowKnightRefs>
     <ExportDir>bin/Publish</ExportDir>
-    <NativeBinaries />
+    <NativeBinaries>../artifacts</NativeBinaries>
     <!--<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
   </PropertyGroup>
   <Import Project="LocalOverrides.targets" Condition="Exists('LocalOverrides.targets')" />
