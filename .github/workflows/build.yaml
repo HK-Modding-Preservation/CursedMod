@@ -24,6 +24,13 @@ jobs:
     runs-on: ${{ matrix.runner.os }}
 
     steps:
+      - name: Get tag number from tag string
+        id: tag_number
+        run: |
+          orig_tag="${{ github.ref_name }}"
+          echo "tag_number=${orig_tag/v/}" >> $GITHUB_OUTPUT
+        shell: bash
+
       - name: Get current date as package key
         id: cache_key
         run: echo "key=$(date +'%W')_${{ matrix.runner.os }}_${{ matrix.runner.arch }}_${{ matrix.kind }}_${{ matrix.mode }}" >> $GITHUB_OUTPUT
@@ -149,7 +156,7 @@ jobs:
         # the same as the assembly version) to version.txt. The contents of these files are read to step outputs for use in release
         run: |
           $sha = (Get-Content artifacts/Publish-Cs/CursedMod/SHA.txt)[3]
-          $ver = "${{  github.ref_name }}"
+          $ver = "${{ github.ref_name }}"
           echo "archiveHash=$sha" >> $env:GITHUB_OUTPUT
           echo "buildVersion=$ver" >> $env:GITHUB_OUTPUT
 
