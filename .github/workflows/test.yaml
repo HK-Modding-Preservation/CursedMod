@@ -1,0 +1,36 @@
+name: Testing actions
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build-cpp:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner:
+          - { name: linux, os: ubuntu-latest, arch: x86_64 }
+          - { name: macos, os: macos-13, arch: x86_64 }
+          - { name: windows, os: windows-latest, arch: x64 }
+        kind: [shared]
+        mode: [releasedbg]
+
+    runs-on: ${{ matrix.runner.os }}
+
+    steps:
+      - name: Simulate tag number
+        id: tag_number
+        run: echo "tag=v1.2.3.4" >> $GITHUB_OUTPUT
+        shell: bash
+
+        - name: Get tag number from tag string
+        id: tag_getter
+        run: echo "tag_number=${"${{ steps.tag_number.outputs.tag }}"/v/""}" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Print variable
+        run: echo "${{ steps.tag_getter.outputs.tag_number }}"
+        shell: bash
