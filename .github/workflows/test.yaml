@@ -2,9 +2,9 @@ name: Testing actions
 
 on:
   push:
-    branches: [master]
+    branches: [C#]
   pull_request:
-    branches: [master]
+    branches: [C#]
 
 jobs:
   test-job:
