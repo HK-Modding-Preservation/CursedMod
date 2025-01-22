@@ -7,7 +7,7 @@ on:
     branches: [master]
 
 jobs:
-  build-cpp:
+  test-job:
     strategy:
       fail-fast: false
       matrix:
@@ -26,7 +26,7 @@ jobs:
         run: echo "tag=v1.2.3.4" >> $GITHUB_OUTPUT
         shell: bash
 
-        - name: Get tag number from tag string
+      - name: Get tag number from tag string
         id: tag_getter
         run: echo "tag_number=${"${{ steps.tag_number.outputs.tag }}"/v/""}" >> $GITHUB_OUTPUT
         shell: bash
