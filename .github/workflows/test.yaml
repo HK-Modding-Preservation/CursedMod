@@ -28,7 +28,9 @@ jobs:
 
       - name: Get tag number from tag string
         id: tag_getter
-        run: echo "tag_number=${"${{ steps.tag_number.outputs.tag }}"/v/""}" >> $GITHUB_OUTPUT
+        run: |
+          orig_tag="${{ steps.tag_number.outputs.tag }}"
+          echo "tag_number=${orig_tag/v/}" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Print variable
